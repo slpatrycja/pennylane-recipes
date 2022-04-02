@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
-  get 'hello/world'
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
+  namespace :internal_api do
+    resources :recipes, only: [:index, :show]
+  end
 
-  # Defines the root path route ("/")
-  # root "articles#index"
+  root 'app#index'
 end
