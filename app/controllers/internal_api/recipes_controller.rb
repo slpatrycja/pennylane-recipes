@@ -3,7 +3,16 @@
 module InternalApi
   class RecipesController < BaseController
     def index
-      render json: Recipe.all
+      if params[:query]
+        ingredients_query = params[:query].map { |ing| "\"#{ing}\"" }.join(' & ')
+        result = ActiveRecord::Base.connection.execute(
+          "SELECT * FROM recipes WHERE ingredients_tsvector @@ websearch_to_tsquery('simple', '#{ingredients_query}')
+           ORDER BY jsonb_array_length(ingredients)"
+        )
+        render json: result
+      else
+        render json: Recipe.all
+      end
     end
 
     def show
