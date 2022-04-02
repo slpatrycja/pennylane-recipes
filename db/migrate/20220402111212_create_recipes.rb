@@ -8,9 +8,9 @@ class CreateRecipes < ActiveRecord::Migration[7.0]
       t.string :image_url
       t.string :ingredients, array: true, default: []
 
-      t.references :authors, index: true
-      t.references :categories, index: true
-      t.references :cuisines, index: true
+      t.references :author, index: true
+      t.references :category, index: true
+      t.references :cuisine, index: true
 
       t.timestamps
     end
