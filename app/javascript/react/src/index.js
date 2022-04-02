@@ -1,4 +1,4 @@
 import { define } from 'remount'
-import Hello from "./components/Hello"
+import Index from "./components/Index"
 
-define({ 'hello-component': Hello })
+define({ 'index-component': Index })
