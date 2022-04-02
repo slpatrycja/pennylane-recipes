@@ -39,14 +39,14 @@ ActiveRecord::Schema[7.0].define(version: 2022_04_02_111212) do
     t.decimal "ratings"
     t.string "image_url"
     t.string "ingredients", default: [], array: true
-    t.bigint "authors_id"
-    t.bigint "categories_id"
-    t.bigint "cuisines_id"
+    t.bigint "author_id"
+    t.bigint "category_id"
+    t.bigint "cuisine_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["authors_id"], name: "index_recipes_on_authors_id"
-    t.index ["categories_id"], name: "index_recipes_on_categories_id"
-    t.index ["cuisines_id"], name: "index_recipes_on_cuisines_id"
+    t.index ["author_id"], name: "index_recipes_on_author_id"
+    t.index ["category_id"], name: "index_recipes_on_category_id"
+    t.index ["cuisine_id"], name: "index_recipes_on_cuisine_id"
     t.index ["ingredients"], name: "index_recipes_on_ingredients", using: :gin
   end
 
