@@ -9,13 +9,13 @@ class Searchbar extends Component {
           <input
             type='text'
             size='45'
-            class="form-control"
+            className="form-control"
             placeholder='Search by ingredients (separated by comma)'
             onChange={this.props.handleSearch}
             value={this.props.query} />
           <button
             type='submit'
-            class="btn btn-primary"
+            className="btn btn-primary"
             onClick={this.props.onSearch}>
             Search
           </button>

@@ -1,3 +1,7 @@
 .recipes-table {
   margin-top: 25px;
 }
+
+.recipe-img {
+  max-height: 100px;
+}

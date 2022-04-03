@@ -3,26 +3,15 @@
 module InternalApi
   class RecipesController < BaseController
     def index
-      if params[:query]
-        ingredients_query = params[:query].map { |ing| "\"#{ing}\"" }.join(' & ')
-        result = ActiveRecord::Base.connection.execute(
-          "SELECT * FROM recipes WHERE ingredients_tsvector @@ websearch_to_tsquery('simple', '#{ingredients_query}')
-           ORDER BY jsonb_array_length(ingredients)"
-        )
-        render json: result
-      else
-        render json: Recipe.all
-      end
-    end
+      collection = ::RecipesSearch.new(search_params[:query], search_params[:category_id]).call
 
-    def show
-      render json: Recipe.find(params.require(:id))
+      render json: RecipeRepresenter.for_collection(collection).to_json
     end
 
     private
 
-    def offset
-      (params.fetch(:page, 1) - 1) * PER_PAGE
+    def search_params
+      params.permit(:category_id, query: [])
     end
   end
 end

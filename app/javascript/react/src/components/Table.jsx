@@ -3,7 +3,7 @@ import ReactTable from 'react-table-6';
 import 'react-table-6/react-table.css'
 import '../assets/Table.css';
 
-class Index extends Component {
+class Table extends Component {
   render() {
      const columns = [{
        id: 'title',
@@ -30,22 +30,41 @@ class Index extends Component {
        Header: 'Ingredients',
        accessor: 'ingredients',
        width: 450,
-       style: { 'whiteSpace': 'unset' },
+       style: { 'whiteSpace': 'break-spaces' },
+       Cell: ({ row, value: cell }) => {
+         return cell.join("\r\n");
+        }
        },{
        id: 'author',
        Header: 'Author',
-       accessor: 'author_id'
+       accessor: 'author'
        },{
        id: 'category',
        Header: 'Category',
-       accessor: 'category_id'
-    }]
+       accessor: 'category'
+       },{
+       id: 'image',
+       Header: 'Image',
+       accessor: 'image_url',
+       Cell: ({ row, value: cell }) => {
+         return <img className='recipe-img' src={cell} />;
+       },
+       style: { 'display': 'flex', 'flexDirection': 'column', 'justifyContent': 'center', 'alignItems': 'center' },
+     }]
+
+    const loadingText = 'Loading...'
+    const tableText = this.props.error
+            ? 'Recipes are currently unavailable. Please try again later.'
+            : 'There are no recipes for selected filters.'
 
     return (
           <div className="recipes-table">
               <ReactTable
                   data={this.props.recipes}
                   columns={columns}
+                  loading={this.props.isLoading}
+                  loadingText={loadingText}
+                  noDataText={tableText}
                   defaultPageSize = {10}
                   pageSizeOptions = {[10]}
               />
@@ -53,4 +72,4 @@ class Index extends Component {
     )
   }
 }
-export default Index;
+export default Table;
