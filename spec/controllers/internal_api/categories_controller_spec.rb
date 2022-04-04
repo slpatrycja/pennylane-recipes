@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe InternalApi::CategoriesController do
-  let!(:category1) { Category.create!(name: 'Category 1') }
-  let!(:category2) { Category.create!(name: 'Category 2') }
+  let!(:category1) { create(:category) }
+  let!(:category2) { create(:category) }
 
   describe 'GET #index' do
     subject { get :index }

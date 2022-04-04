@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe RecipesSearch do
-  let!(:category) { Category.create!(name: 'Category 1') }
+  let!(:category) { create(:category) }
   let!(:recipe1) do
     Recipe.create!(
       title: 'Recipe1',

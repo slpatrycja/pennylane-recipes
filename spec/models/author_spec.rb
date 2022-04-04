@@ -10,7 +10,7 @@ RSpec.describe Author do
   end
 
   describe 'validations' do
-    subject { described_class.new(username: 'Test') }
+    subject { create(:author) }
 
     it { is_expected.to validate_presence_of(:username) }
     it { is_expected.to validate_uniqueness_of(:username) }

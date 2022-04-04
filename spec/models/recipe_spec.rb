@@ -20,7 +20,7 @@ RSpec.describe Recipe do
   end
 
   describe 'validations' do
-    subject { described_class.new(title: 'Test', cook_time_minutes: 10, prep_time_minutes: 10) }
+    subject { create(:recipe) }
 
     it { is_expected.to validate_presence_of(:title) }
     it { is_expected.to validate_presence_of(:cook_time_minutes) }

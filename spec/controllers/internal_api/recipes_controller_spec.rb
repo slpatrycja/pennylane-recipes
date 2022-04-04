@@ -1,32 +1,27 @@
 # frozen_string_literal: true
 
 RSpec.describe InternalApi::RecipesController do
-  let!(:category) { Category.create!(name: 'Category 1') }
+  let!(:category) { create(:category) }
   let!(:recipe1) do
-    Recipe.create!(
-      title: 'Recipe1',
-      cook_time_minutes: 10,
-      prep_time_minutes: 10,
-      ingredients: ['1 gallon whole milk', '1 cup plain yogurt with active cultures'],
-      category: category
-    )
+    create(:recipe,
+           title: 'Recipe1',
+           ingredients: ['1 gallon whole milk', '1 cup plain yogurt with active cultures'],
+           category: category
+          )
   end
   let!(:recipe2) do
-    Recipe.create!(
-      title: 'Recipe2',
-      cook_time_minutes: 10,
-      prep_time_minutes: 10,
-      ingredients: ['1 cup milk', '1 tablespoon lemon juice'],
-      category: category
-    )
+    create(:recipe,
+           title: 'Recipe2',
+           ingredients: ['1 cup milk', '1 tablespoon lemon juice'],
+           category: category
+          )
   end
   let!(:recipe3) do
-    Recipe.create!(
-      title: 'Recipe3',
-      cook_time_minutes: 10,
-      prep_time_minutes: 10,
-      ingredients: ['1 cup all-purpose flour', '1 cup yellow cornmeal']
-    )
+    create(:recipe,
+           title: 'Recipe3',
+           ingredients: ['1 cup all-purpose flour', '1 cup yellow cornmeal'],
+           category: nil
+          )
   end
 
   describe 'GET #index' do
@@ -37,23 +32,23 @@ RSpec.describe InternalApi::RecipesController do
       let(:expected_result) do
         [
           {
-            'title' => 'Recipe1',
-            'prep_time_minutes' => 10,
-            'cook_time_minutes' => 10,
+            'title' => recipe1.title,
+            'prep_time_minutes' => recipe1.prep_time_minutes,
+            'cook_time_minutes' => recipe1.cook_time_minutes,
             'ingredients' => ['1 gallon whole milk', '1 cup plain yogurt with active cultures'],
-            'category' => 'Category 1'
+            'category' => category.name
           },
           {
-            'title' => 'Recipe2',
-            'prep_time_minutes' => 10,
-            'cook_time_minutes' => 10,
+            'title' => recipe2.title,
+            'prep_time_minutes' => recipe2.prep_time_minutes,
+            'cook_time_minutes' => recipe2.cook_time_minutes,
             'ingredients' => ['1 cup milk', '1 tablespoon lemon juice'],
-            'category' => 'Category 1'
+            'category' => category.name
           },
           {
-            'title' => 'Recipe3',
-            'prep_time_minutes' => 10,
-            'cook_time_minutes' => 10,
+            'title' => recipe3.title,
+            'prep_time_minutes' => recipe3.prep_time_minutes,
+            'cook_time_minutes' => recipe3.cook_time_minutes,
             'ingredients' => ['1 cup all-purpose flour', '1 cup yellow cornmeal']
           }
         ]
@@ -72,11 +67,11 @@ RSpec.describe InternalApi::RecipesController do
       let(:expected_result) do
         [
           {
-            'title' => 'Recipe1',
-            'prep_time_minutes' => 10,
-            'cook_time_minutes' => 10,
+            'title' => recipe1.title,
+            'prep_time_minutes' => recipe1.prep_time_minutes,
+            'cook_time_minutes' => recipe1.cook_time_minutes,
             'ingredients' => ['1 gallon whole milk', '1 cup plain yogurt with active cultures'],
-            'category' => 'Category 1'
+            'category' => category.name
           }
         ]
       end
@@ -94,23 +89,23 @@ RSpec.describe InternalApi::RecipesController do
       let(:expected_result) do
         [
           {
-            'title' => 'Recipe1',
-            'prep_time_minutes' => 10,
-            'cook_time_minutes' => 10,
+            'title' => recipe1.title,
+            'prep_time_minutes' => recipe1.prep_time_minutes,
+            'cook_time_minutes' => recipe1.cook_time_minutes,
             'ingredients' => ['1 gallon whole milk', '1 cup plain yogurt with active cultures'],
-            'category' => 'Category 1'
+            'category' => category.name
           },
           {
-            'title' => 'Recipe2',
-            'prep_time_minutes' => 10,
-            'cook_time_minutes' => 10,
+            'title' => recipe2.title,
+            'prep_time_minutes' => recipe2.prep_time_minutes,
+            'cook_time_minutes' => recipe2.cook_time_minutes,
             'ingredients' => ['1 cup milk', '1 tablespoon lemon juice'],
-            'category' => 'Category 1'
+            'category' => category.name
           }
         ]
       end
 
-      it 'returns all recipes with ingredients matching the filters' do
+      it 'returns all recipes with category matching the filters' do
         subject
 
         expect(JSON.parse(response.body)).to match_array(expected_result)
@@ -123,16 +118,16 @@ RSpec.describe InternalApi::RecipesController do
       let(:expected_result) do
         [
           {
-            'title' => 'Recipe2',
-            'prep_time_minutes' => 10,
-            'cook_time_minutes' => 10,
+            'title' => recipe2.title,
+            'prep_time_minutes' => recipe2.prep_time_minutes,
+            'cook_time_minutes' => recipe2.cook_time_minutes,
             'ingredients' => ['1 cup milk', '1 tablespoon lemon juice'],
-            'category' => 'Category 1'
+            'category' => category.name
           }
         ]
       end
 
-      it 'returns all recipes with ingredients matching the filters' do
+      it 'returns all recipes with category and ingredients matching the filters' do
         subject
 
         expect(JSON.parse(response.body)).to match_array(expected_result)

@@ -10,7 +10,7 @@ RSpec.describe Cuisine do
   end
 
   describe 'validations' do
-    subject { described_class.new(name: 'Test') }
+    subject { create(:cuisine) }
 
     it { is_expected.to validate_presence_of(:name) }
     it { is_expected.to validate_uniqueness_of(:name) }
