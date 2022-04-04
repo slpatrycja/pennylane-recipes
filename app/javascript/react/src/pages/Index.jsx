@@ -1,79 +1,34 @@
-import React, { useEffect, useState, Component } from 'react'
-import axios from 'axios'
+import * as React from 'react';
+import useRecipes from '../hooks/useRecipes';
+import useCategories from '../hooks/useCategories';
 import Table from '../components/Table'
 import Searchbar from '../components/Searchbar'
 import SelectDropdown from '../components/SelectDropdown'
 import '../assets/Index.css';
 
-class Index extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      recipes: [],
-      categories: [],
-      query: null,
-      categoryId: null,
-      isLoading: false,
-      error: false,
-    };
+function Index() {
+  const [query, setQuery] = React.useState('');
+  const [categoryId, setCategoryId] = React.useState(null);
+  const [recipes, isError, isLoading] = useRecipes([query, categoryId]);
+  const categories = useCategories();
 
-    this.loadRecipes = this.loadRecipes.bind(this);
-    this.handleSearch = this.handleSearch.bind(this);
-    this.handleCategoryChange = this.handleCategoryChange.bind(this);
-    this.selectedCategory = this.selectedCategory.bind(this);
+  const currentCategory = () => {
+    const found = categories.find(category => category[0] === categoryId);
 
+    return found ? found[1] : null;
   }
 
-  async loadRecipes() {
-    console.log(this.state.categoryId);
-    this.setState({ isLoading: true });
+  return (
+    <div className="main-container">
+      <h1>Pennylane Recipes</h1>
 
-    axios
-      .get('internal_api/recipes', { params: { query: this.state.query?.split(','), category_id: this.state.categoryId } } )
-      .then((res) => {
-        this.setState({ recipes: res.data, isLoading: false });
-      })
-      .catch((_error) => this.setState({ isLoading: false, error: true }));
-   }
-
-  async loadCategories() {
-    axios
-      .get('internal_api/categories')
-      .then((res) => {
-        this.setState({ categories: res.data });
-      })
-      .catch((_error) => this.setState({ isLoading: false, error: true }));
-   }
-
-  handleSearch (e) {
-    this.setState({ query: e.target.value })
-  }
-
-  async handleCategoryChange(e) {
-    await this.setState({ categoryId: e.value });
-    this.loadRecipes();
-  }
-
-  selectedCategory() {
-    return this.state.categories.find(c => c.id === this.state.categoryId);
-  }
-
-  componentDidMount() {
-    this.loadRecipes();
-    this.loadCategories();
-  }
-
-  render() {
-    return (
-          <div className="main-container">
-            <h1>Pennylane Recipes</h1>
-            <div className="filters-wrapper">
-              <Searchbar onSearch={this.loadRecipes} query={this.state.query} handleSearch={this.handleSearch}/>
-              <SelectDropdown options={this.state.categories} value={this.selectedCategory()} placeholder="Filter by category" onChange={this.handleCategoryChange}/>
-            </div>
-            <Table recipes={this.state.recipes} isLoading={this.state.isLoading} error={this.state.error}/>
-          </div>
-    )
-  }
+      <div className="filters-wrapper">
+        <Searchbar query={query} handleSearch={(e) => setQuery(e.target.value)} />
+        <SelectDropdown options={categories} value={currentCategory()} placeholder="Filter by category" onChange={(e) => setCategoryId(e.value)} onClear={() => setCategoryId(null)}/>
+      </div>
+      <Table recipes={recipes} isLoading={isLoading} isError={isError} />
+    </div>
+  );
 }
+
 export default Index;
