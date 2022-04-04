@@ -12,7 +12,7 @@ class RecipesSearch
   ORDER_CLAUSE = 'ORDER BY jsonb_array_length(ingredients)'
 
   def call
-    result = Recipe.find_by_sql(
+    Recipe.find_by_sql(
       [
         select_clause,
         from_clause,
@@ -20,9 +20,6 @@ class RecipesSearch
         order_query
       ].compact.join(' ')
     )
-
-    preload_associations(result)
-    result
   end
 
   private
@@ -65,12 +62,5 @@ class RecipesSearch
     ActiveRecord::Base.connection.quote(
       ingredients.map { |ingredient| "\"#{ingredient}\"" }.join(' & ')
     )
-  end
-
-  def preload_associations(result)
-    ActiveRecord::Associations::Preloader.new(
-      records: result,
-      associations: [:author, :category]
-    ).call
   end
 end

@@ -5,6 +5,11 @@ module InternalApi
     def index
       collection = ::RecipesSearch.new(search_params[:query], search_params[:category_id]).call
 
+      ActiveRecord::Associations::Preloader.new(
+        records: collection,
+        associations: [:author, :category]
+      ).call
+
       render json: RecipeRepresenter.for_collection(collection).to_json
     end
 
