@@ -3,7 +3,7 @@
 class RecipesSearch
   extend Dry::Initializer
 
-  param :ingredients, Types::Array.of(Types::String).constructor { |a| a.select(&:present?) }.optional, reader: :private
+  param :ingredients, Types::Array.of(Types::String).constructor { |el| el.select(&:present?) }.optional, reader: :private
   param :category_id, Types::Coercible::Integer.optional, reader: :private
 
   SELECT_CLAUSE = 'SELECT id, title, prep_time_minutes, cook_time_minutes, ' \
