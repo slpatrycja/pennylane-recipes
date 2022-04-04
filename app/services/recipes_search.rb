@@ -3,10 +3,10 @@
 class RecipesSearch
   extend Dry::Initializer
 
-  param :query, Types::Array.of(Types::String).optional, reader: :private
+  param :ingredients, Types::Array.of(Types::String).constructor { |a| a.select(&:present?) }.optional, reader: :private
   param :category_id, Types::Coercible::Integer.optional, reader: :private
 
-  SELECT_CLAUSE = 'SELECT id, title, prep_time_minutes, cook_time_minutes, '\
+  SELECT_CLAUSE = 'SELECT id, title, prep_time_minutes, cook_time_minutes, ' \
     'ratings, ingredients, image_url, author_id, category_id'
   FROM_CLAUSE = 'FROM recipes'
   ORDER_CLAUSE = 'ORDER BY jsonb_array_length(ingredients)'
@@ -31,7 +31,7 @@ class RecipesSearch
 
   private
 
-  attr_reader :query, :category_id
+  attr_reader :ingredients, :category_id
 
   def select_clause
     SELECT_CLAUSE
@@ -54,26 +54,20 @@ class RecipesSearch
   end
 
   def ingredients_where_clause
-    return unless compact_query.present?
+    return unless ingredients.present?
 
     @ingredients_where_clause ||= "ingredients_tsvector @@ websearch_to_tsquery('simple', #{ingredients_tsquery})"
   end
 
   def order_query
-    return unless compact_query.present?
+    return unless ingredients.present?
 
-    "ORDER BY jsonb_array_length(ingredients)"
+    'ORDER BY jsonb_array_length(ingredients)'
   end
 
   def ingredients_tsquery
     ActiveRecord::Base.connection.quote(
-      compact_query.map { |ingredient| "\"#{ingredient}\"" }.join(' & ')
+      ingredients.map { |ingredient| "\"#{ingredient}\"" }.join(' & ')
     )
-  end
-
-  def compact_query
-    return unless query.present?
-
-    @compact_query ||= query.select(&:present?)
   end
 end
