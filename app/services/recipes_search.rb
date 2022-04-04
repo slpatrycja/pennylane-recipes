@@ -17,7 +17,7 @@ class RecipesSearch
         select_clause,
         from_clause,
         where_clause,
-        order_query,
+        order_query
       ].compact.join(' ')
     )
 
@@ -44,19 +44,19 @@ class RecipesSearch
   end
 
   def category_id_where_clause
-    return unless category_id.present?
+    return if category_id.blank?
 
     @category_id_where_clause ||= "category_id = #{category_id}"
   end
 
   def ingredients_where_clause
-    return unless ingredients.present?
+    return if ingredients.blank?
 
     @ingredients_where_clause ||= "ingredients_tsvector @@ websearch_to_tsquery('simple', #{ingredients_tsquery})"
   end
 
   def order_query
-    return unless ingredients.present?
+    return if ingredients.blank?
 
     'ORDER BY jsonb_array_length(ingredients)'
   end
