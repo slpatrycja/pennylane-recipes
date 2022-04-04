@@ -21,11 +21,7 @@ class RecipesSearch
       ].compact.join(' ')
     )
 
-    ActiveRecord::Associations::Preloader.new(
-      records: result,
-      associations: [:author, :category]
-    ).call
-
+    preload_associations(result)
     result
   end
 
@@ -69,5 +65,12 @@ class RecipesSearch
     ActiveRecord::Base.connection.quote(
       ingredients.map { |ingredient| "\"#{ingredient}\"" }.join(' & ')
     )
+  end
+
+  def preload_associations(result)
+    ActiveRecord::Associations::Preloader.new(
+      records: result,
+      associations: [:author, :category]
+    ).call
   end
 end
