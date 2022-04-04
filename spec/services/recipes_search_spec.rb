@@ -52,7 +52,7 @@ RSpec.describe RecipesSearch do
         end
 
         context 'ingredients are present but contains only empty strings' do
-          let(:query) { ["", "  "] }
+          let(:ingredients) { ["", "  "] }
 
           it 'returns all recipes from the database' do
             expect(subject.to_a).to match_array([recipe1, recipe2, recipe3])

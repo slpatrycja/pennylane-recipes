@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import '../assets/Searchbar.css';
 
-function Searchbar({ query, handleSearch }) {
+function Searchbar({ ingredients, handleSearch }) {
   return (
     <div className='searchbar-container'>
       <form onSubmit={e => e.preventDefault()} className="form-inline">
@@ -11,7 +11,7 @@ function Searchbar({ query, handleSearch }) {
           className="form-control"
           placeholder='Search by ingredients (separated by comma)'
           onChange={handleSearch}
-          value={query} />
+          value={ingredients} />
       </form>
     </div>
   )

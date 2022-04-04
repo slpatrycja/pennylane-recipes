@@ -3,7 +3,7 @@
 module InternalApi
   class RecipesController < BaseController
     def index
-      collection = ::RecipesSearch.new(search_params[:query], search_params[:category_id]).call
+      collection = ::RecipesSearch.new(search_params[:ingredients], search_params[:category_id]).call
 
       ActiveRecord::Associations::Preloader.new(
         records: collection,
@@ -16,7 +16,7 @@ module InternalApi
     private
 
     def search_params
-      params.permit(:category_id, query: [])
+      params.permit(:category_id, ingredients: [])
     end
   end
 end

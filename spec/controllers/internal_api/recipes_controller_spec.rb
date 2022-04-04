@@ -62,7 +62,7 @@ RSpec.describe InternalApi::RecipesController do
     end
 
     context 'with ingredients filters' do
-      let(:params) { { query: ['yogurt'] } }
+      let(:params) { { ingredients: ['yogurt'] } }
 
       let(:expected_result) do
         [
@@ -113,7 +113,7 @@ RSpec.describe InternalApi::RecipesController do
     end
 
     context 'with both category and ingredients filters' do
-      let(:params) { { query: ['lemon'], category_id: category.id } }
+      let(:params) { { ingredients: ['lemon'], category_id: category.id } }
 
       let(:expected_result) do
         [

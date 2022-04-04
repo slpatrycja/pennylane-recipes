@@ -7,9 +7,9 @@ import SelectDropdown from '../components/SelectDropdown'
 import '../assets/Index.css';
 
 function Index() {
-  const [query, setQuery] = React.useState('');
+  const [ingredients, setIngredients] = React.useState('');
   const [categoryId, setCategoryId] = React.useState(null);
-  const [recipes, isError, isLoading] = useRecipes([query, categoryId]);
+  const [recipes, isError, isLoading] = useRecipes([ingredients, categoryId]);
   const categories = useCategories();
 
   const currentCategory = () => {
@@ -23,7 +23,7 @@ function Index() {
       <h1>Pennylane Recipes</h1>
 
       <div className="filters-wrapper">
-        <Searchbar query={query} handleSearch={(e) => setQuery(e.target.value)} />
+        <Searchbar ingredients={ingredients} handleSearch={(e) => setIngredients(e.target.value)} />
         <SelectDropdown options={categories} value={currentCategory()} placeholder="Filter by category" onChange={(e) => setCategoryId(e.value)} onClear={() => setCategoryId(null)}/>
       </div>
       <Table recipes={recipes} isLoading={isLoading} isError={isError} />
