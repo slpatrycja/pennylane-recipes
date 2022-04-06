@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
-RSpec.describe RecipesSearch do
+RSpec.describe Recipes::Search::Result do
   let!(:category) { create(:category) }
   let!(:recipe1) do
     Recipe.create!(
       title: 'Recipe1',
       cook_time_minutes: 10,
       prep_time_minutes: 10,
-      ingredients: ['1 gallon whole milk', '1 cup plain yogurt with active cultures'],
+      ingredients: ['1 gallon whole milk', '1 tablespoon lemon juice'],
       category: category
     )
   end
@@ -16,7 +16,7 @@ RSpec.describe RecipesSearch do
       title: 'Recipe2',
       cook_time_minutes: 10,
       prep_time_minutes: 10,
-      ingredients: ['1 cup milk', '1 tablespoon lemon juice'],
+      ingredients: ['1 cup milk', '1 ounce butter'],
       category: category
     )
   end
@@ -60,11 +60,19 @@ RSpec.describe RecipesSearch do
         end
       end
 
-      context 'ingredients are given' do
+      context 'ingredient is given' do
         let(:ingredients) { ['milk'] }
 
-        it 'returns all recipes with ingredients matching the query' do
+        it 'returns all recipes with ingredients matching the query, ordered by the most relevant' do
           expect(subject.to_a).to match_array([recipe1, recipe2])
+        end
+      end
+
+      context 'multiple ingredients are given' do
+        let(:ingredients) { ['milk', 'butter'] }
+
+        it 'returns all recipes with any of ingredients matching the query, ordered by the most relevant' do
+          expect(subject.to_a).to eq([recipe2, recipe1])
         end
       end
     end
@@ -100,7 +108,7 @@ RSpec.describe RecipesSearch do
       let(:ingredients) { ['lemon'] }
 
       it 'returns recipes with matching ingredients and category' do
-        expect(subject.to_a).to eq([recipe2])
+        expect(subject.to_a).to eq([recipe1])
       end
     end
   end
